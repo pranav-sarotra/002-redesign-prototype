@@ -296,27 +296,50 @@
     background: var(--forest-deep);
   }
 
-  /* Desktop uses a single sharp full-bleed image, so the blurred echo layer
-     is not needed. */
+  /* The blurred echo stays on desktop and fills the full bleed. Because it is
+     heavily blurred, it can be scaled to any width without ever reading as
+     soft — blur is the intent. The sharp photo then only has to cover part of
+     the viewport, so it is never stretched much beyond its native pixels. */
   .heroBackdrop,
   .heroBackdropTint {
-    display: none;
+    display: block;
   }
 
-  /* Full-bleed sharp photo across the whole hero. Only a small top/bottom
-     over-scan is needed to cover the gentle parallax translate, which keeps
-     the image close to 1:1 pixels and avoids soft upscaling. */
+  .heroBackdrop img {
+    filter: blur(26px) brightness(0.46) saturate(0.68);
+    transform: scale(1.12);
+    object-position: 60% center;
+  }
+
+  .heroBackdropTint {
+    background:
+      linear-gradient(90deg, rgba(0, 19, 64, 0.92), rgba(0, 19, 64, 0.72) 46%, rgba(1, 31, 89, 0.42)),
+      rgba(0, 19, 64, 0.3);
+  }
+
+  /* Sharp photo occupies the right-hand region only, at a natural landscape
+     ratio, so on a wide monitor it renders near its native resolution instead
+     of being blown up across the full width. Its edges are feathered with a
+     mask so it melts into the blurred field — no box, no seam. */
   .heroPhotoWindow {
-    inset: -6% 0 auto 0;
+    inset: 0 0 0 auto;
     translate: none;
-    width: 100%;
-    height: 112%;
+    width: 72%;
+    height: 100%;
     aspect-ratio: auto;
     border-radius: 0;
     clip-path: none;
     box-shadow: none;
     background: none;
     will-change: transform;
+    -webkit-mask-image:
+      linear-gradient(90deg, transparent, #000 26%, #000),
+      linear-gradient(180deg, transparent, #000 16%, #000 80%, transparent);
+    mask-image:
+      linear-gradient(90deg, transparent, #000 26%, #000),
+      linear-gradient(180deg, transparent, #000 16%, #000 80%, transparent);
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
   }
 
   /* Gentle bottom weighting only, for footing and the scroll cue — no
@@ -337,13 +360,13 @@
       linear-gradient(
         90deg,
         var(--forest-deep) 0%,
-        rgba(0, 19, 64, 0.94) 24%,
-        rgba(0, 19, 64, 0.78) 40%,
-        rgba(0, 19, 64, 0.44) 56%,
-        rgba(0, 19, 64, 0.16) 70%,
-        transparent 82%
+        rgba(0, 19, 64, 0.96) 18%,
+        rgba(0, 19, 64, 0.74) 30%,
+        rgba(0, 19, 64, 0.34) 42%,
+        rgba(0, 19, 64, 0.1) 52%,
+        transparent 60%
       ),
-      linear-gradient(180deg, rgba(0, 19, 64, 0.4), rgba(0, 19, 64, 0.12) 42%, transparent 68%);
+      linear-gradient(180deg, rgba(0, 19, 64, 0.34), rgba(0, 19, 64, 0.1) 42%, transparent 68%);
   }
 
   .heroInner {

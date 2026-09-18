@@ -57,7 +57,16 @@ export default function GroupHome() {
         </div>
         <div className={s.heroBackdropTint} aria-hidden="true" />
         <motion.div className={s.heroPhotoWindow} style={{ y }} aria-hidden="true">
-          <img src="images/hero-centered.jpg" alt="" className={s.heroImg} fetchPriority="high" />
+          {/* The 2x asset is only fetched on desktop, where the sharp layer is
+              large enough to need it; small screens keep the lighter file. */}
+          <img
+            src="images/hero-centered.jpg"
+            srcSet="images/hero-centered.jpg 1264w, images/hero-2x.jpg 2528w"
+            sizes="(min-width: 1024px) 72vw, 100vw"
+            alt=""
+            className={s.heroImg}
+            fetchPriority="high"
+          />
         </motion.div>
         <div className={s.heroCopyField} aria-hidden="true" />
         <motion.div className={clsx("container", s.heroInner)} style={{ opacity: fade }}>
