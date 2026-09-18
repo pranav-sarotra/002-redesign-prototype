@@ -1,0 +1,129 @@
+.map {
+  width: 100%;
+  height: auto;
+  display: block;
+  font-family: var(--font-body);
+  overflow: visible;
+}
+
+.ocean {
+  fill: rgba(247, 249, 252, 0.045);
+}
+
+.country {
+  fill: rgba(247, 249, 252, 0.1);
+  stroke: rgba(247, 249, 252, 0.38);
+  stroke-width: 0.5;
+  stroke-linejoin: round;
+  transition: fill 0.3s, stroke 0.3s;
+}
+
+.countryClickable {
+  cursor: pointer;
+}
+
+.countryClickable:hover {
+  fill: rgba(247, 249, 252, 0.17);
+}
+
+.countryActive,
+.countryClickable.countryActive:hover {
+  fill: rgba(212, 168, 67, 0.26);
+  stroke: rgba(212, 168, 67, 0.9);
+}
+
+.countryFaded {
+  fill: rgba(247, 249, 252, 0.035);
+  stroke: rgba(247, 249, 252, 0.14);
+}
+
+.lake {
+  fill: var(--forest-deep);
+  stroke: rgba(247, 249, 252, 0.28);
+  stroke-width: 0.4;
+}
+
+.label {
+  fill: rgba(247, 249, 252, 0.55);
+  font-size: 3.6px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+.labelFaded {
+  fill: rgba(247, 249, 252, 0.22);
+}
+
+.oceanLabel {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 3.4px;
+  fill: rgba(247, 249, 252, 0.35);
+  pointer-events: none;
+}
+
+.town {
+  fill: rgba(247, 249, 252, 0.88);
+  font-size: 3px;
+  font-weight: 700;
+  pointer-events: none;
+  paint-order: stroke;
+  stroke: var(--forest-deep);
+  stroke-width: 1px;
+  stroke-linejoin: round;
+}
+
+.pin {
+  cursor: pointer;
+  outline: none;
+}
+
+.pinMuted {
+  cursor: default;
+}
+
+.pinDot {
+  fill: var(--accent);
+  stroke: var(--forest-deep);
+  stroke-width: 0.6;
+  transition: fill 0.2s;
+}
+
+.pinMuted .pinDot {
+  fill: rgba(247, 249, 252, 0.3);
+}
+
+.pin:hover .pinDot,
+.pin:focus-visible .pinDot {
+  fill: #fff;
+}
+
+.pinMuted:hover .pinDot {
+  fill: rgba(247, 249, 252, 0.3);
+}
+
+.pulse {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 0.7;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pulse 1.8s ease-out infinite;
+}
+
+@keyframes pulse {
+  from {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  to {
+    transform: scale(3.4);
+    opacity: 0;
+  }
+}
+
+.mini .pinDot {
+  stroke-width: 0.4;
+}

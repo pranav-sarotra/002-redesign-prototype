@@ -1,0 +1,248 @@
+/* greeting */
+
+.greeting {
+  display: grid;
+  gap: 4px;
+}
+
+.greetingTitle {
+  color: var(--cream);
+  min-height: 2.1em;
+  max-width: 15ch;
+}
+
+@media (max-width: 480px) {
+  .greetingTitle {
+    font-size: 2.55rem;
+    max-width: none;
+    min-height: 3.1em;
+  }
+}
+
+.caret {
+  display: inline-block;
+  width: 0.06em;
+  height: 0.88em;
+  margin-left: 0.05em;
+  background: var(--accent);
+  vertical-align: -0.06em;
+  border-radius: 2px;
+}
+
+.caretBlink {
+  animation: blink 1.05s steps(1) infinite;
+}
+
+.langRow {
+  margin-top: 12px;
+  height: 1.6em;
+}
+
+.lang {
+  display: inline-flex;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted-light);
+}
+
+.lang i {
+  font-style: normal;
+  color: var(--accent);
+}
+
+/* ticker */
+
+.ticker {
+  overflow: hidden;
+  background: var(--ink);
+  color: var(--cream);
+  padding: 16px 0;
+  border-block: 1px solid var(--line-light);
+}
+
+.track {
+  display: flex;
+  width: max-content;
+  animation: marquee 46s linear infinite;
+}
+
+.ticker:hover .track {
+  animation-play-state: paused;
+}
+
+.tickerItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 26px;
+  padding-right: 26px;
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 1.7vw, 1.45rem);
+  white-space: nowrap;
+  letter-spacing: -0.01em;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+/* footer */
+
+.footer {
+  position: relative;
+  background: var(--ink);
+  color: var(--cream);
+  padding: clamp(56px, 8vw, 96px) 0 32px;
+}
+
+.footerTop {
+  display: grid;
+  gap: 40px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--line-light);
+}
+
+@media (min-width: 900px) {
+  .footerTop {
+    grid-template-columns: 1.4fr 1fr;
+    align-items: center;
+  }
+}
+
+.footerBrand {
+  display: grid;
+  gap: 20px;
+  justify-items: start;
+}
+
+.footerLogo {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.footerLogo img {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  object-fit: contain;
+  padding: 6px;
+  background: var(--white);
+}
+
+.footerLogo span {
+  display: grid;
+  line-height: 1.1;
+}
+
+.footerLogo strong {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.4rem;
+}
+
+.footerLogo small {
+  font-size: 0.64rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--muted-light);
+}
+
+.footerMotto {
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 2.2vw, 1.8rem);
+  line-height: 1.25;
+  max-width: 24ch;
+  letter-spacing: -0.01em;
+}
+
+.footerCtas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.footerMap {
+  position: relative;
+  max-width: 340px;
+  width: 100%;
+  justify-self: center;
+}
+
+.footerMapCap {
+  display: block;
+  margin-top: 8px;
+  text-align: center;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted-light);
+}
+
+.footerCols {
+  display: grid;
+  gap: 32px 24px;
+  padding: 40px 0;
+  grid-template-columns: 1fr 1fr;
+}
+
+@media (min-width: 900px) {
+  .footerCols {
+    grid-template-columns: 1.3fr 1fr 1fr 1.1fr;
+  }
+}
+
+.footerCols h4 {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted-light);
+  margin-bottom: 12px;
+}
+
+.footerCols ul {
+  display: grid;
+  gap: 8px;
+}
+
+.footerCols a,
+.footerCols button {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: rgba(247, 249, 252, 0.85);
+  transition: color 0.2s;
+}
+
+.footerCols a:hover,
+.footerCols button:hover {
+  color: var(--accent);
+}
+
+.footerBottom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line-light);
+  font-size: 0.78rem;
+  color: var(--muted-light);
+}
+
+.badges {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
