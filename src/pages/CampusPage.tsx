@@ -207,8 +207,6 @@ export default function CampusPage() {
   const heroRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
   const imgY = useTransform(scrollYProgress, [0, 1], ["0%", "26%"]);
-  const motifY = useTransform(scrollYProgress, [0, 1], ["0%", "-28%"]);
-  const motifX = useTransform(scrollYProgress, [0, 1], ["0%", "5%"]);
   const copyY = useTransform(scrollYProgress, [0, 1], ["0%", "38%"]);
   const copyO = useTransform(scrollYProgress, [0, 0.65], [1, 0]);
   useMotionValueEvent(scrollYProgress, "change", (v) => setShowBar(v >= 0.95));
@@ -228,11 +226,7 @@ export default function CampusPage() {
           <img src="images/nairobi-hero.jpg" alt="" fetchPriority="high" />
         </motion.div>
         <div className={s.heroShade} aria-hidden="true" />
-        <motion.div
-          className={clsx("motif", s.heroMotif)}
-          style={{ backgroundImage: "url(images/motif-wildlife.png)", y: motifY, x: motifX }}
-          aria-hidden="true"
-        />
+        <div className={s.heroQuietField} aria-hidden="true" />
         <motion.div className={clsx("container", s.heroInner)} style={{ y: copyY, opacity: copyO }}>
           <p className={s.crumb}>
             <Link to="/">Braeburn Group</Link>
@@ -338,28 +332,34 @@ export default function CampusPage() {
         </div>
       </section>
 
-      {/* ---------------- Motif parallax band ---------------- */}
-      <section ref={bandRef} className={s.band} aria-label="The Nairobi signature">
-        <motion.div
-          className={clsx("motif", s.bandMotif)}
-          style={{ backgroundImage: "url(images/motif-wildlife.png)", x: bandX }}
-          aria-hidden="true"
-        />
-        <div className={clsx("container", s.bandInner)}>
-          <Reveal>
-            <blockquote className={s.bandQuote}>
-              <p>"I know every path on this campus by the animal on its signpost. Giraffe means the library."</p>
-              <footer>— Amara, Year 6</footer>
-            </blockquote>
-          </Reveal>
-          <Reveal delay={0.1} className={s.bandNote}>
-            <p className="eyebrow light">The Nairobi signature</p>
-            <p>
-              Savannah wildlife line-art is Nairobi's wayfinding device — on signposts, on this site, on the prospectus
-              cover. Nanyuki's is mountain forms; Kisumu's is water. Swap the logo out and the design should visibly
-              break.
-            </p>
-          </Reveal>
+      {/* ---------------- Nairobi wayfinding signature ---------------- */}
+      <section ref={bandRef} className={s.band} aria-labelledby="signature-title">
+        <div className={clsx("container", s.bandShell)}>
+          <div className={s.bandCopy}>
+            <Reveal>
+              <p className="eyebrow light">Nairobi wayfinding · giraffe path</p>
+              <blockquote className={s.bandQuote}>
+                <p>"I know every path on this campus by the animal on its signpost. Giraffe means the library."</p>
+                <footer>— Amara, Year 6</footer>
+              </blockquote>
+            </Reveal>
+            <Reveal delay={0.1} className={s.bandNote}>
+              <h2 id="signature-title" className="sr-only">
+                The Nairobi signature
+              </h2>
+              <p>
+                Savannah wildlife line-art is Nairobi's wayfinding device — on signposts, on this site and on the
+                prospectus cover. Nanyuki's is mountain forms; Kisumu's is water. Swap the logo out and the design
+                should visibly break.
+              </p>
+            </Reveal>
+          </div>
+          <motion.div className={s.bandArtwork} style={{ x: bandX }} aria-hidden="true">
+            <div
+              className={clsx("motif", s.bandMotif)}
+              style={{ backgroundImage: "url(images/motif-wildlife-transparent.png)" }}
+            />
+          </motion.div>
         </div>
       </section>
 
@@ -468,7 +468,6 @@ export default function CampusPage() {
 
       {/* ---------------- CTA ---------------- */}
       <section className={clsx("section on-dark", s.cta)} aria-labelledby="cta-title">
-        <div className="motif" style={{ backgroundImage: "url(images/motif-wildlife.png)", opacity: 0.16 }} aria-hidden="true" />
         <div className={clsx("container", s.ctaInner)}>
           <Reveal>
             <p className="eyebrow light">Next step</p>

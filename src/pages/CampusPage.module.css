@@ -26,20 +26,24 @@
 .heroShade {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(1, 31, 89, 0.55), rgba(1, 31, 89, 0.15) 35%, rgba(1, 31, 89, 0.92) 100%);
+  background: linear-gradient(180deg, rgba(1, 31, 89, 0.64), rgba(1, 31, 89, 0.24) 38%, rgba(1, 31, 89, 0.84) 100%);
 }
 
-.heroMotif {
-  inset: -20% -10% -10%;
-  opacity: 0.45;
-  background-size: 150% auto;
-  background-position: right bottom;
-  will-change: transform;
+/* The photograph creates place; copy gets an independent, stable tonal field.
+   This stays effective even where backdrop filters are unavailable. */
+.heroQuietField {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(0, 19, 64, 0.14) 0%, rgba(0, 19, 64, 0.18) 36%, rgba(0, 19, 64, 0.86) 100%);
 }
 
 @media (min-width: 1024px) {
-  .heroMotif {
-    background-size: 110% auto;
+  .heroQuietField {
+    width: min(70%, 900px);
+    background:
+      linear-gradient(90deg, rgba(0, 19, 64, 0.97) 0%, rgba(0, 19, 64, 0.91) 58%, rgba(0, 19, 64, 0.52) 78%, transparent 100%),
+      linear-gradient(180deg, rgba(0, 19, 64, 0.24), rgba(0, 19, 64, 0.78));
   }
 }
 
@@ -426,36 +430,37 @@
   gap: 10px;
 }
 
-/* ---------- motif band ---------- */
+/* ---------- Nairobi wayfinding signature ---------- */
 
 .band {
   position: relative;
-  padding: clamp(72px, 10vw, 140px) 0;
+  padding: clamp(52px, 8vw, 104px) 0;
   background: var(--forest-deep);
   color: var(--cream);
   overflow: hidden;
 }
 
-.bandMotif {
-  inset: 0 -12%;
-  opacity: 0.5;
-  background-size: auto 130%;
-  background-position: center;
-  background-repeat: repeat-x;
-  will-change: transform;
-}
-
-.bandInner {
-  position: relative;
+.bandShell {
   display: grid;
-  gap: 40px;
+  overflow: hidden;
+  border: 1px solid rgba(247, 249, 252, 0.15);
+  border-radius: var(--r-xl);
+  box-shadow: 0 30px 60px -42px rgba(0, 19, 64, 0.95);
 }
 
-@media (min-width: 900px) {
-  .bandInner {
-    grid-template-columns: 1.3fr 1fr;
-    align-items: end;
-  }
+.bandCopy {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 26px;
+  align-content: center;
+  padding: clamp(28px, 5vw, 64px);
+  background: var(--forest-deep);
+}
+
+.bandCopy > * {
+  display: grid;
+  gap: 14px;
 }
 
 .bandQuote p {
@@ -473,13 +478,60 @@
 }
 
 .bandNote {
-  display: grid;
-  gap: 12px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line-light);
 }
 
-.bandNote p:last-child {
+.bandNote p {
+  max-width: 60ch;
   color: var(--muted-light);
   font-size: 0.95rem;
+}
+
+/* Artwork has its own panel. It can be expressive without ever competing
+   with the quote, explanatory copy, controls or focus states. */
+.bandArtwork {
+  position: relative;
+  min-height: 250px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 72% 30%, rgba(212, 168, 67, 0.16), transparent 34%),
+    #09275e;
+}
+
+.bandArtwork::after {
+  content: "";
+  position: absolute;
+  inset: 16px;
+  border: 1px solid rgba(247, 249, 252, 0.13);
+  border-radius: calc(var(--r-xl) - 10px);
+  pointer-events: none;
+}
+
+.bandMotif {
+  inset: -4% -85% -8%;
+  opacity: 0.47;
+  background-size: auto 96%;
+  background-position: center;
+  background-repeat: no-repeat;
+  will-change: transform;
+}
+
+@media (min-width: 900px) {
+  .bandShell {
+    grid-template-columns: minmax(0, 1.2fr) minmax(330px, 0.8fr);
+    min-height: 420px;
+  }
+
+  .bandArtwork {
+    min-height: auto;
+  }
+
+  .bandMotif {
+    inset: -3% -104% -3%;
+    background-size: auto 93%;
+    background-position: center;
+  }
 }
 
 /* ---------- day in the life ---------- */

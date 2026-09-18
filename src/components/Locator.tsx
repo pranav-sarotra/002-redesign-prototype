@@ -79,7 +79,6 @@ export function Locator({ stage, onStage }: Props) {
 
   return (
     <section id="schools" className={clsx(s.section, "section on-dark")} aria-labelledby="locator-title">
-      <div className="motif" style={{ backgroundImage: "url(images/motif-wildlife.png)", opacity: 0.12 }} />
       <div className={clsx("container", s.inner)}>
         <div className={s.head}>
           <div>

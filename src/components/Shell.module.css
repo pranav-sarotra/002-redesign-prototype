@@ -33,7 +33,13 @@
   }
 }
 
-.railLogo img {
+.railLogo {
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+
+.railLogo > img {
   width: 44px;
   height: 44px;
   border-radius: 14px;
@@ -43,8 +49,56 @@
   transition: transform 0.45s var(--ease);
 }
 
-.railLogo:hover img {
+.railLogo:hover > img {
   transform: rotate(-6deg) scale(1.05);
+}
+
+/* The home brand spine shares the rail's opaque ink surface. It is a
+   fixed identity anchor, not a translucent logo placed over photography. */
+.railBrandCopy {
+  display: none;
+}
+
+.railHome .railBrandCopy {
+  position: absolute;
+  left: calc(100% + 12px);
+  top: -2px;
+  z-index: 2;
+  display: grid;
+  gap: 3px;
+  width: 230px;
+  padding: 13px 16px 12px;
+  border-left: 2px solid var(--accent);
+  border-radius: 0 14px 14px 0;
+  background: var(--ink);
+  box-shadow: 16px 14px 32px -24px rgba(0, 19, 64, 0.82);
+  line-height: 1;
+}
+
+.railBrandCopy strong {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+.railBrandCopy small {
+  color: rgba(247, 249, 252, 0.82);
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  line-height: 1.35;
+  text-transform: uppercase;
+}
+
+.railBrandCopy i {
+  margin-top: 3px;
+  color: var(--accent);
+  font-size: 0.56rem;
+  font-style: normal;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 .railNav {
@@ -172,26 +226,35 @@
 }
 
 .topLogo {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
+  gap: 9px;
   padding: 6px 14px 6px 6px;
   border-radius: 999px;
 }
 
-.topLogo img {
-  width: 32px;
-  height: 32px;
-  border-radius: 10px;
-  object-fit: contain;
+.topLogo > span:first-child {
+  width: 36px;
+  height: 36px;
   padding: 4px;
-  background: var(--white);
+  border-radius: 11px;
 }
 
-.topLogo span {
-  font-family: var(--font-display);
+.topLogo > span:last-child {
+  gap: 2px;
+}
+
+.topLogo > span:last-child strong {
   font-size: 1.05rem;
-  letter-spacing: -0.01em;
+}
+
+.topLogo > span:last-child small {
+  font-size: 0.6rem;
+  letter-spacing: 0.075em;
+}
+
+@media (max-width: 350px) {
+  .topLogo > span:last-child small {
+    display: none;
+  }
 }
 
 .topMenu {
@@ -300,37 +363,27 @@
 }
 
 .curtainLogo {
-  display: inline-flex;
-  align-items: center;
   gap: 12px;
 }
 
-.curtainLogo img {
+.curtainLogo > span:first-child {
   width: 40px;
   height: 40px;
-  border-radius: 12px;
-  object-fit: contain;
   padding: 5px;
-  background: var(--white);
+  border-radius: 12px;
 }
 
-.curtainLogo span {
-  display: grid;
+.curtainLogo > span:last-child {
   line-height: 1.1;
 }
 
-.curtainLogo strong {
-  font-family: var(--font-display);
-  font-weight: 500;
+.curtainLogo > span:last-child strong {
   font-size: 1.2rem;
 }
 
-.curtainLogo small {
+.curtainLogo > span:last-child small {
   font-size: 0.62rem;
   letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--muted-light);
-  font-weight: 700;
 }
 
 .curtainClose {
