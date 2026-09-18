@@ -39,7 +39,7 @@ export default function GroupHome() {
 
   const heroRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "22%"]);
+  const y = useTransform(scrollYProgress, [0, 1], ["0%", "8%"]);
   const fade = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
 
   const quickStart = (id: StageId) => {
@@ -53,11 +53,11 @@ export default function GroupHome() {
       <section ref={heroRef} className={s.hero} aria-labelledby="hero-title">
         {/* A low-detail echo creates atmosphere; the sharp portrait remains a single LCP image. */}
         <div className={s.heroBackdrop} aria-hidden="true">
-          <img src="images/hero-wide.jpg" alt="" />
+          <img src="images/hero-centered.jpg" alt="" />
         </div>
         <div className={s.heroBackdropTint} aria-hidden="true" />
         <motion.div className={s.heroPhotoWindow} style={{ y }} aria-hidden="true">
-          <img src="images/hero-wide.jpg" alt="" className={s.heroImg} fetchPriority="high" />
+          <img src="images/hero-centered.jpg" alt="" className={s.heroImg} fetchPriority="high" />
         </motion.div>
         <div className={s.heroCopyField} aria-hidden="true" />
         <motion.div className={clsx("container", s.heroInner)} style={{ opacity: fade }}>

@@ -42,7 +42,7 @@
   position: absolute;
   z-index: -1;
   inset: 0 0 auto;
-  height: clamp(252px, 40svh, 390px);
+  height: clamp(300px, 46svh, 440px);
   overflow: hidden;
   background: var(--forest-deep);
 }
@@ -58,7 +58,9 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 58% center;
+  /* The group is centred in the source with room on both sides, so a centred
+     crop keeps every pupil in frame on narrow (mobile) viewports. */
+  object-position: center center;
   animation: kenburns 18s var(--ease) forwards;
 }
 
@@ -79,7 +81,7 @@
   flex-direction: column;
   justify-content: flex-end;
   gap: 20px;
-  padding-top: calc(clamp(252px, 40svh, 390px) + 26px + env(safe-area-inset-top));
+  padding-top: calc(clamp(300px, 46svh, 440px) + 26px + env(safe-area-inset-top));
   padding-bottom: 48px;
 }
 
@@ -301,13 +303,14 @@
     display: none;
   }
 
-  /* Full-bleed sharp photo across the whole hero. Oversized top and bottom
-     so the parallax translate never exposes a gap behind the image. */
+  /* Full-bleed sharp photo across the whole hero. Only a small top/bottom
+     over-scan is needed to cover the gentle parallax translate, which keeps
+     the image close to 1:1 pixels and avoids soft upscaling. */
   .heroPhotoWindow {
-    inset: -36% 0 auto 0;
+    inset: -6% 0 auto 0;
     translate: none;
     width: 100%;
-    height: 142%;
+    height: 112%;
     aspect-ratio: auto;
     border-radius: 0;
     clip-path: none;
@@ -323,7 +326,7 @@
   }
 
   .heroImg {
-    object-position: 62% center;
+    object-position: 58% center;
   }
 
   /* The copy sits on a smooth navy-to-transparent wash spanning the full
