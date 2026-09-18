@@ -468,6 +468,12 @@ export default function CampusPage() {
 
       {/* ---------------- CTA ---------------- */}
       <section className={clsx("section on-dark", s.cta)} aria-labelledby="cta-title">
+        <div className={s.ctaArtwork} aria-hidden="true">
+          <div
+            className={clsx("motif", s.ctaMotif)}
+            style={{ backgroundImage: "url(images/motif-wildlife-transparent.png)" }}
+          />
+        </div>
         <div className={clsx("container", s.ctaInner)}>
           <Reveal>
             <p className="eyebrow light">Next step</p>

@@ -797,10 +797,37 @@
   overflow: hidden;
 }
 
+/* Wildlife remains part of the Nairobi signature on solid ink surfaces,
+   but is contained in the non-reading side of the CTA. */
+.ctaArtwork {
+  display: none;
+}
+
 .ctaInner {
   position: relative;
+  z-index: 1;
   display: grid;
   gap: 32px;
+}
+
+@media (min-width: 900px) {
+  .ctaArtwork {
+    position: absolute;
+    z-index: 0;
+    inset: 0 0 0 auto;
+    display: block;
+    width: min(62%, 860px);
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, transparent 27%, #000 62%, #000 100%);
+    mask-image: linear-gradient(90deg, transparent 0%, transparent 27%, #000 62%, #000 100%);
+  }
+
+  .ctaMotif {
+    inset: -6% -32%;
+    opacity: 0.27;
+    background-size: auto 92%;
+    background-position: center right;
+  }
 }
 
 @media (min-width: 900px) {
