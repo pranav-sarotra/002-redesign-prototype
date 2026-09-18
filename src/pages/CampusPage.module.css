@@ -39,11 +39,21 @@
 }
 
 @media (min-width: 1024px) {
+  /* Full-width wash that fades smoothly to transparent, so there is no boxed
+     edge cutting a vertical line across the photograph. */
   .heroQuietField {
-    width: min(70%, 900px);
+    width: 100%;
     background:
-      linear-gradient(90deg, rgba(0, 19, 64, 0.97) 0%, rgba(0, 19, 64, 0.91) 58%, rgba(0, 19, 64, 0.52) 78%, transparent 100%),
-      linear-gradient(180deg, rgba(0, 19, 64, 0.24), rgba(0, 19, 64, 0.78));
+      linear-gradient(
+        90deg,
+        rgba(0, 19, 64, 0.95) 0%,
+        rgba(0, 19, 64, 0.88) 26%,
+        rgba(0, 19, 64, 0.66) 44%,
+        rgba(0, 19, 64, 0.34) 60%,
+        rgba(0, 19, 64, 0.1) 74%,
+        transparent 86%
+      ),
+      linear-gradient(180deg, rgba(0, 19, 64, 0.2), rgba(0, 19, 64, 0.1) 40%, transparent 66%);
   }
 }
 

@@ -39,7 +39,7 @@ export default function GroupHome() {
 
   const heroRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "22%"]);
+  const y = useTransform(scrollYProgress, [0, 1], ["0%", "8%"]);
   const fade = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
 
   const quickStart = (id: StageId) => {
@@ -53,14 +53,38 @@ export default function GroupHome() {
       <section ref={heroRef} className={s.hero} aria-labelledby="hero-title">
         {/* A low-detail echo creates atmosphere; the sharp portrait remains a single LCP image. */}
         <div className={s.heroBackdrop} aria-hidden="true">
-          <img src="images/hero.jpg" alt="" />
+          <img src="images/hero-centered.jpg" alt="" />
         </div>
         <div className={s.heroBackdropTint} aria-hidden="true" />
         <motion.div className={s.heroPhotoWindow} style={{ y }} aria-hidden="true">
-          <img src="images/hero.jpg" alt="" className={s.heroImg} fetchPriority="high" />
+          {/* The 2x asset is only fetched on desktop, where the sharp layer is
+              large enough to need it; small screens keep the lighter file. */}
+          <img
+            src="images/hero-centered.jpg"
+            srcSet="images/hero-centered.jpg 1264w, images/hero-2x.jpg 2528w"
+            sizes="(min-width: 1024px) 72vw, 100vw"
+            alt=""
+            className={s.heroImg}
+            fetchPriority="high"
+          />
         </motion.div>
         <div className={s.heroCopyField} aria-hidden="true" />
         <motion.div className={clsx("container", s.heroInner)} style={{ opacity: fade }}>
+          {/* Group masthead — part of the hero content, not fixed navigation,
+              so it scrolls away as the visitor reaches Schools and beyond. */}
+          <div className={s.masthead}>
+            <div className={s.mastheadRow}>
+              <span className={s.mastheadCrest} aria-hidden="true">
+                <img src="brand/logo-mark.png" alt="" width={72} height={72} />
+              </span>
+              <span className={s.mastheadCopy}>
+                <strong>Braeburn</strong>
+                <small>Group of International Schools</small>
+              </span>
+              <span className={s.mastheadSince}>Since 1979</span>
+            </div>
+            <span className={s.mastheadRule} aria-hidden="true" />
+          </div>
           <div className={s.heroTop}>
             <span>11 schools · one Group</span>
             <span>Kenya · Tanzania · Rwanda</span>
