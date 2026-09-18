@@ -53,11 +53,11 @@ export default function GroupHome() {
       <section ref={heroRef} className={s.hero} aria-labelledby="hero-title">
         {/* A low-detail echo creates atmosphere; the sharp portrait remains a single LCP image. */}
         <div className={s.heroBackdrop} aria-hidden="true">
-          <img src="images/hero.jpg" alt="" />
+          <img src="images/hero-wide.jpg" alt="" />
         </div>
         <div className={s.heroBackdropTint} aria-hidden="true" />
         <motion.div className={s.heroPhotoWindow} style={{ y }} aria-hidden="true">
-          <img src="images/hero.jpg" alt="" className={s.heroImg} fetchPriority="high" />
+          <img src="images/hero-wide.jpg" alt="" className={s.heroImg} fetchPriority="high" />
         </motion.div>
         <div className={s.heroCopyField} aria-hidden="true" />
         <motion.div className={clsx("container", s.heroInner)} style={{ opacity: fade }}>
