@@ -60,7 +60,24 @@ export default function GroupHome() {
           <img src="images/hero.jpg" alt="" className={s.heroImg} fetchPriority="high" />
         </motion.div>
         <div className={s.heroCopyField} aria-hidden="true" />
+        {/* Understated gold hairline marking the image/text boundary (desktop). */}
+        <div className={s.heroBoundary} aria-hidden="true" />
         <motion.div className={clsx("container", s.heroInner)} style={{ opacity: fade }}>
+          {/* Group masthead — part of the hero content, not fixed navigation,
+              so it scrolls away as the visitor reaches Schools and beyond. */}
+          <div className={s.masthead}>
+            <div className={s.mastheadRow}>
+              <span className={s.mastheadCrest} aria-hidden="true">
+                <img src="brand/logo-mark.png" alt="" width={72} height={72} />
+              </span>
+              <span className={s.mastheadCopy}>
+                <strong>Braeburn</strong>
+                <small>Group of International Schools</small>
+              </span>
+              <span className={s.mastheadSince}>Since 1979</span>
+            </div>
+            <span className={s.mastheadRule} aria-hidden="true" />
+          </div>
           <div className={s.heroTop}>
             <span>11 schools · one Group</span>
             <span>Kenya · Tanzania · Rwanda</span>

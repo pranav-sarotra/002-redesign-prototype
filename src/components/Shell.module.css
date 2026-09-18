@@ -53,54 +53,6 @@
   transform: rotate(-6deg) scale(1.05);
 }
 
-/* The home brand spine shares the rail's opaque ink surface. It is a
-   fixed identity anchor, not a translucent logo placed over photography. */
-.railBrandCopy {
-  display: none;
-}
-
-.railHome .railBrandCopy {
-  position: absolute;
-  left: calc(100% + 12px);
-  top: -2px;
-  z-index: 2;
-  display: grid;
-  gap: 3px;
-  width: 230px;
-  padding: 13px 16px 12px;
-  border-left: 2px solid var(--accent);
-  border-radius: 0 14px 14px 0;
-  background: var(--ink);
-  box-shadow: 16px 14px 32px -24px rgba(0, 19, 64, 0.82);
-  line-height: 1;
-}
-
-.railBrandCopy strong {
-  font-family: var(--font-display);
-  font-size: 1.25rem;
-  font-weight: 500;
-  letter-spacing: -0.02em;
-}
-
-.railBrandCopy small {
-  color: rgba(247, 249, 252, 0.82);
-  font-size: 0.62rem;
-  font-weight: 800;
-  letter-spacing: 0.1em;
-  line-height: 1.35;
-  text-transform: uppercase;
-}
-
-.railBrandCopy i {
-  margin-top: 3px;
-  color: var(--accent);
-  font-size: 0.56rem;
-  font-style: normal;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
 .railNav {
   display: grid;
   gap: 8px;

@@ -386,7 +386,6 @@ function EnquirySheet({ campusId, onClose }: { campusId?: string; onClose: () =>
 
 export function Shell() {
   const location = useLocation();
-  const isHome = location.pathname === "/";
   const [menu, setMenu] = useState(false);
   const [enquiry, setEnquiry] = useState<{ campusId?: string } | null>(null);
 
@@ -429,15 +428,11 @@ export function Shell() {
           Skip to content
         </a>
 
-        {/* Desktop side rail. On home this opens into the fixed brand spine. */}
-        <aside className={clsx(s.rail, isHome && s.railHome, "no-print")} aria-label="Primary">
+        {/* Desktop side rail — crest only on every page. The full Group
+            masthead now lives inside the home hero content, not the rail. */}
+        <aside className={clsx(s.rail, "no-print")} aria-label="Primary">
           <Link to="/" className={s.railLogo} aria-label="Braeburn Group of International Schools home">
             <img src="brand/logo-mark.png" alt="" width={44} height={44} />
-            <span className={s.railBrandCopy}>
-              <strong>Braeburn</strong>
-              <small>Group of International Schools</small>
-              <i>Since 1979</i>
-            </span>
           </Link>
           <nav className={s.railNav} aria-label="Primary">
             {NAV.map(({ to, label, icon: Icon }) => (

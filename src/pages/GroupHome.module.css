@@ -72,6 +72,11 @@
   background: linear-gradient(180deg, rgba(0, 19, 64, 0) 0, rgba(0, 19, 64, 0.16) 33%, var(--forest-deep) 49%, var(--forest-deep) 100%);
 }
 
+/* Desktop-only gold hairline that marks the image/text boundary. */
+.heroBoundary {
+  display: none;
+}
+
 .heroInner {
   position: relative;
   z-index: 1;
@@ -81,6 +86,84 @@
   gap: 20px;
   padding-top: calc(clamp(252px, 40svh, 390px) + 26px + env(safe-area-inset-top));
   padding-bottom: 48px;
+}
+
+/* Group masthead: lives inside the hero content so it scrolls away.
+   Desktop only — the mobile top bar already carries the compact lockup. */
+.masthead {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .masthead {
+    display: grid;
+    gap: 16px;
+    max-width: 560px;
+    margin-bottom: 6px;
+  }
+
+  .mastheadRow {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+
+  .mastheadCrest {
+    display: grid;
+    place-items: center;
+    width: 66px;
+    height: 66px;
+    flex: none;
+    padding: 8px;
+    border-radius: 18px;
+    background: var(--cream);
+    box-shadow: 0 12px 26px -16px rgba(0, 19, 64, 0.85);
+  }
+
+  .mastheadCrest img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .mastheadCopy {
+    display: grid;
+    gap: 5px;
+    line-height: 1;
+  }
+
+  .mastheadCopy strong {
+    font-family: var(--font-display);
+    font-size: 2.35rem;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: var(--cream);
+  }
+
+  .mastheadCopy small {
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.17em;
+    text-transform: uppercase;
+    color: rgba(247, 249, 252, 0.82);
+  }
+
+  .mastheadSince {
+    margin-left: auto;
+    align-self: center;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  /* Restrained horizontal gold rule closing the masthead. */
+  .mastheadRule {
+    display: block;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(212, 168, 67, 0.95), rgba(212, 168, 67, 0.35) 62%, transparent);
+  }
 }
 
 .heroTop {
@@ -208,60 +291,103 @@
 }
 
 @media (min-width: 1024px) {
+  /* A deliberate image/text boundary: a stable navy copy field on the left,
+     a separate sharp landscape photo window on the right. The seam width is
+     shared by every hero layer so the gold hairline lands exactly on it. */
   .hero {
+    --hero-window: min(46%, 760px);
     min-height: 100svh;
+    background: var(--ink);
   }
 
-  /* A landscape window preserves the whole pupil group instead of turning
-     a wide photograph into a narrow, cropped full-height strip. */
+  /* The right side is solid navy carrying one sharp window; no blurred echo
+     bleeds across the boundary on desktop. */
+  .heroBackdrop,
+  .heroBackdropTint {
+    display: none;
+  }
+
+  /* Landscape window, right-aligned and vertically centred, framed in navy.
+     No diagonal clip means the whole pupil group is preserved and square to
+     the boundary. */
   .heroPhotoWindow {
-    inset: clamp(88px, 11svh, 132px) 0 auto auto;
-    width: min(58%, 840px);
+    inset: 50% 0 auto auto;
+    translate: 0 -50%;
+    width: var(--hero-window);
     height: auto;
     aspect-ratio: 16 / 10;
-    border-radius: 30px 0 0 30px;
-    clip-path: polygon(5% 0, 100% 0, 100% 100%, 0 100%);
-    box-shadow: -24px 28px 54px -38px rgba(0, 19, 64, 0.95);
+    border-radius: 24px 0 0 24px;
+    clip-path: none;
+    box-shadow: -26px 30px 60px -40px rgba(0, 19, 64, 0.95);
   }
 
+  /* Keep the left edge — the first pupil — clear of any darkening; only a
+     quiet vignette weights the lower photo. */
   .heroPhotoWindow::after {
-    background: linear-gradient(90deg, rgba(0, 19, 64, 0.16), transparent 28%, rgba(0, 19, 64, 0.08));
+    background: linear-gradient(180deg, transparent 58%, rgba(0, 19, 64, 0.34));
   }
 
   .heroImg {
-    object-position: 52% center;
+    object-position: 50% center;
   }
 
+  /* Solid, stable navy reading field that stops cleanly at the boundary and
+     never reaches across into the photograph. */
   .heroCopyField {
-    width: min(58%, 800px);
+    width: calc(100% - var(--hero-window));
     background:
-      linear-gradient(90deg, rgba(0, 19, 64, 0.99) 0%, rgba(0, 19, 64, 0.96) 64%, rgba(0, 19, 64, 0.68) 84%, transparent 100%),
-      linear-gradient(180deg, rgba(0, 19, 64, 0.36), rgba(0, 19, 64, 0.82));
+      linear-gradient(180deg, rgba(0, 19, 64, 0.55), var(--forest-deep) 34%);
+  }
+
+  /* Understated gold hairline sitting exactly on the seam. */
+  .heroBoundary {
+    display: block;
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    bottom: 0;
+    right: var(--hero-window);
+    width: 1px;
+    background: linear-gradient(
+      180deg,
+      transparent,
+      rgba(212, 168, 67, 0.5) 14%,
+      rgba(212, 168, 67, 0.5) 86%,
+      transparent
+    );
   }
 
   .heroInner {
     justify-content: space-between;
-    gap: 40px;
-    padding-top: 118px;
-    padding-bottom: 72px;
+    gap: 36px;
+    padding-top: 104px;
+    padding-bottom: 64px;
   }
 
-  .heroBottom {
-    grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.7fr);
-    gap: 56px;
+  /* All hero copy stays inside the left navy field, never over the photo. */
+  .masthead {
+    max-width: min(540px, 40vw);
   }
 
   .heroTop {
-    max-width: 610px;
+    max-width: min(540px, 40vw);
+  }
+
+  .heroBottom {
+    grid-template-columns: 1fr;
+    max-width: min(540px, 40vw);
+    gap: 26px;
   }
 
   .quickStart {
-    justify-self: end;
-    width: min(100%, 390px);
+    justify-self: start;
+    width: 100%;
+    max-width: 400px;
   }
 
   .scrollCue {
     display: grid;
+    left: calc((100% - var(--hero-window)) / 2);
   }
 }
 
