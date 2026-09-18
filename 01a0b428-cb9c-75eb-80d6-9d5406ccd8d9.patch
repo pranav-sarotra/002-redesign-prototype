@@ -1,0 +1,1164 @@
+diff --git a/HERO_ART_DIRECTION.md b/HERO_ART_DIRECTION.md
+new file mode 100644
+index 0000000..fef3df9
+--- /dev/null
++++ b/HERO_ART_DIRECTION.md
+@@ -0,0 +1,148 @@
++# Braeburn hero art direction — readability, hierarchy and identity
++
++## Decision in one sentence
++
++**Give every hero one job:** photography supplies atmosphere, the copy sits on a deliberately quiet tonal field, the crest has one fixed identity home, and Nairobi's wildlife drawings become a *wayfinding signature* rather than a translucent illustration laid across content.
++
++This is a correction to the current composition, not an opacity-only tweak. The current campus hero puts a high-detail photograph, a full-width white animal frieze (`screen` blend), and white display type in exactly the same visual plane. At some crops, the visual noise is guaranteed to pass through the letters. Fading the existing frieze only on desktop is not robust: it will drift back over the copy at other aspect ratios and it remains dependent on the underlying photo.
++
++---
++
++## The creative system: **Quiet field / living portrait / brand spine**
++
++1. **Quiet field** — Every word of consequential hero copy has a stable, dark tonal field behind it. This is an editorial gradient/colour field, not a floating glass card full of effects.
++2. **Living portrait** — People and place remain sharp and emotionally present, but live in a deliberately cropped photo zone rather than behind all the words.
++3. **Brand spine** — The crest and Group name get a single, fixed, high-contrast home connected to the existing left rail. It should feel like a school seal on a field guide or admission letter, not a bright promotional badge.
++4. **Signature, not wallpaper** — Nairobi wildlife art appears once at a time, in a clearly assigned visual zone. It is never allowed behind body copy, calls to action, the logo, or headings.
++
++The result is calmer and more premium: family photography does the emotional work; the mark and copy do the navigation work; the wildlife device does the local-campus recognition work.
++
++---
++
++## 1. Nairobi campus hero (issue 1)
++
++### Design decision
++
++**Remove the full animal frieze from the photographic hero.** Do not merely fade it toward the right. The jacaranda campus image is already an appropriate Nairobi signature and deserves room to breathe.
++
++Keep the wildlife language, but recast the existing `The Nairobi signature` band as a composed two-zone moment directly below the stage-selector section:
++
++- **Copy zone:** solid `--forest-deep` / ink panel, with the quote and the explanatory copy. No artwork under text.
++- **Artwork zone:** a separate dark field carrying the animals at low-to-medium contrast. On desktop it occupies the right 40–45% of the band; on mobile it becomes a short, separate art panel below the copy.
++- Add a quiet hairline/gold wayfinding rule and an explicit label such as `Nairobi wayfinding · giraffe path` so the motif reads as a purposeful campus device, not generic decoration.
++- If a motif reference is wanted in the hero, use **one small cropped animal/signpost fragment at the far lower-right only**; it must not cross into the text safe area. This is optional—the cleaner default is no wildlife illustration in the hero.
++
++### What changes in the current code
++
++| Current location | Current problem | Direction |
++| --- | --- | --- |
++| `src/pages/CampusPage.tsx` — `heroMotif` between `heroShade` and `heroInner` | Full-canvas artwork shares a plane with the headline. | Remove this element from the hero. Retain/add artwork only in the separated signature band. |
++| `src/index.css` — generic `.motif` | Global `mix-blend-mode: screen` makes the final contrast depend on whatever sits beneath it. | Stop treating `motif` as a universal overlay primitive. Create explicit motif variants per surface; do not use blend modes beneath readable content. |
++| `src/pages/CampusPage.module.css` — `.heroMotif` | `inset: -20% -10% -10%`, `opacity: .45` makes the whole frame a collision zone. | Delete this hero rule. Make `.bandArtwork` an isolated right-side image zone and keep `.bandCopy` on an opaque surface. |
++| Campus `.bandMotif` | The quote still sits on top of the art at `opacity: .5`. | Split the band into sibling copy/art panels; art never lives behind `.bandQuote` or `.bandNote`. |
++
++### Asset treatment
++
++Before implementation, create an approved transparent wildlife asset (SVG preferred; otherwise a PNG with the black field removed). The existing `motif-wildlife.png` is white art on opaque black and therefore requires `screen` blending to work. A transparent asset lets us use normal compositing and control contrast predictably.
++
++Do **not** make the animals larger, brighter, or repeat them. One complete frieze in its own section is enough. Individual animal fragments should only be introduced after the brand team supplies separable, approved source artwork.
++
++---
++
++## 2. Group home hero (issue 2)
++
++### Design decision
++
++Turn the current full-bleed photo into a **living portrait on the right**, with a soft, low-detail echo of the scene behind the left copy field:
++
++```text
++Desktop
++┌──────────────── quiet navy editorial field ────────────┬─ sharp photo ─┐
++│ brand spine                                             │ pupils / scene│
++│ Welcome to Braeburn                                     │               │
++│ explanation + two actions                               │ quick start   │
++└────────────────────────────────────────────────────────┴───────────────┘
++```
++
++- On desktop, use the sharp `hero.jpg` as a right-side photo window, roughly 42–50% of the available hero width. Crop with `object-position` so the pupil group is visible, rather than simply shrinking the current full-bleed image.
++- Behind the complete hero is an enlarged duplicate of that image, heavily softened and darkened, with a navy colour wash. This gives the page a sense of place without making it responsible for text contrast.
++- The text side is a broad ink-to-transparent tonal field—not a boxed card—with a minimum reliable dark value behind the headline, lede and CTAs. The quick-start module remains an explicitly bounded surface rather than another element over uncontrolled photography.
++- On mobile, lead with a shallow sharp photo area, then use a continuous ink content field below it. Do not put the typewriter heading over the photo on small screens.
++
++### Implementation outline
++
++In `GroupHome.tsx` / `GroupHome.module.css`:
++
++1. Keep **one semantic image** in the foreground photo window. The blurred echo is decorative (`aria-hidden`) so screen readers do not receive duplicate image content.
++2. Add a decorative `heroBackdrop` layer using the same source, clipped to the hero and styled with approximately `filter: blur(16–20px) brightness(.52) saturate(.72); transform: scale(1.08)`. Put a navy overlay over it; the scale avoids a blurred edge.
++3. Replace the current all-frame `.heroShade` with a predictable left-to-right tonal field. The darkest stop must cover the copy width at every desktop breakpoint; avoid a transparent middle directly behind text.
++4. Add a `heroPhotoWindow` wrapper for the sharp image on the right. Set responsive `object-position` after reviewing real crops at 1024, 1280 and 1440px. The existing photo has a wide group, so this cannot be left to default centre cropping.
++5. Keep the current subtle Ken Burns movement only on the sharp photo window. The soft background should be static; otherwise the blur becomes visual chatter.
++
++Blur is supporting atmosphere, not being used as a contrast substitute. The quiet field is still dark enough if `backdrop-filter` is unavailable.
++
++---
++
++## 3. Home brand presence (issue 3)
++
++### Design decision: a **brand spine**, not a louder logo
++
++The desktop left rail is already the right behaviour: it persists while content changes. On the home page, turn its top into a deliberately composed **identity ribbon** that extends just into the hero instead of leaving a tiny dark crest to disappear against the photo.
++
++- The ribbon begins in the existing 84px rail, so it feels attached to navigation rather than like a second floating header.
++- It carries one crest in a warm-paper inset, followed by the approved Group wordmark or a carefully typeset live-text lockup:
++  - `Braeburn`
++  - `GROUP OF INTERNATIONAL SCHOOLS`
++- A hairline gold rule and a restrained `Since 1979` detail can close the unit. These are optional supporting details, not extra calls to action.
++- The ribbon has an opaque deep-navy / paper surface. It never uses opacity, blend mode, or the underlying hero photo as its background.
++- It is the **only** full brand lockup visible in the desktop opening frame. Avoid adding another crest inside the hero copy.
++
++This will make the mark feel like an institutional seal—quiet, specific and always locatable—rather than trying to make it "pop" with an oversized bright logo.
++
++### Responsive behaviour
++
++- **Desktop (≥1024px):** the rail stays fixed. On the home route only, the identity ribbon may extend 170–220px into the hero at the top. Navigation remains below, as it is now. Other routes retain the compact crest-only rail unless their own content needs a route lockup.
++- **Tablet/mobile:** retain one compact, opaque top lockup. Upgrade the current `.topLogo` from `crest + Braeburn` to `crest + Braeburn` with a small second line `Group of International Schools` when there is space; at the narrowest width use `Braeburn Group` and preserve the full name as an accessible label. Keep the menu control separate.
++- The home hero’s existing `.heroTop` descriptor is then redundant as brand identification. It can become useful factual context (`11 schools · Kenya, Tanzania & Rwanda`) or be removed. It must not repeat a faint version of the Group name.
++
++### Asset rule
++
++Use an approved group wordmark (preferably transparent SVG) supplied for web use. The repository currently has a crest at `public/brand/logo-mark.png` and non-public raster logo files at the root; `logo-blue.jpg` includes a white matte and only says “Braeburn Schools”. Do not recreate the official logo in CSS or invert it over photography. If an approved Group lockup is not available before build, use the existing crest on warm paper plus live text until brand supplies the correct file.
++
++The developer should factor this into a reusable `BrandLockup` component in `src/components/`, then render it in `Shell.tsx`; logo spacing and accessible naming should not be reimplemented in the curtain, footer and mobile header separately.
++
++---
++
++## Build sequence
++
++1. **Confirm source assets**: obtain approved transparent Group lockup and transparent/separable Nairobi wildlife artwork. Record the file source and dimensions in `public/brand/` and `public/images/`.
++2. **Create the two primitives**: `BrandLockup` and explicit `WildlifeArtwork` / CSS variants. Remove generic blend-driven motif usage from content surfaces.
++3. **Recompose GroupHome first**: build the quiet-field/right-photo hero and crop it at target viewports. Add the home-only brand-spine state in the shell.
++4. **Recompose CampusPage**: remove hero artwork, then split the existing signature band into independent copy and art zones.
++5. **Tune all copy tokens and CTA surfaces**; do not solve a weak background by raising every text colour to pure white or adding more drop shadow.
++6. **QA and visual review** with the real image crops before merging.
++
++---
++
++## Non-negotiable acceptance checks
++
++### Contrast and hierarchy
++
++- Normal hero body copy and controls meet WCAG AA contrast of **4.5:1** in their actual rendered state; large display headings meet **3:1** at minimum. Check the lightest/darkest portions of every responsive crop, not only the design reference size.
++- The crest/wordmark and `GROUP OF INTERNATIONAL SCHOOLS` are readable without hover, animation, or a background image loading successfully.
++- No decorative wildlife line passes behind a letter, CTA, logo, form control or focus outline.
++- There is one obvious primary reading order: identity → welcome/campus name → value statement → primary action. Quick start is visually secondary.
++
++### Responsive and technical
++
++- Review at 360×800, 390×844, 768×1024, 1024×768, 1280×800 and 1440×900. Specifically inspect the home typewriter at its longest Kinyarwanda phrase and the campus heading when it wraps.
++- At mobile sizes the image is decorative while the text is on a stable field; the content must not depend on blur support.
++- Honour `prefers-reduced-motion`; no artwork or blurred field needs parallax to communicate hierarchy.
++- Keep the foreground image as the LCP candidate and do not fetch two different high-resolution photos for the same hero. The decorative echo may reuse the same cached source or be replaced with a lightweight pre-generated blurred derivative if profiling requires it.
++- Test keyboard focus, visible focus rings, image-disabled state, and `npm run build` after implementation.
++
++---
++
++## Direction to give the developer
++
++> Do not solve this with a blanket opacity reduction or a right-side mask alone. Remove the wildlife frieze from the Nairobi photo hero, make the wildlife a dedicated signature/wayfinding panel, give all hero copy a stable navy tonal field, move the Group home photo into a sharp right-side portrait with a soft faded echo behind the page, and turn the persistent left rail into a single readable home brand ribbon. Build these as reusable, route-aware primitives and prove them against the target responsive crops and contrast checks.
+diff --git a/public/images/motif-wildlife-transparent.png b/public/images/motif-wildlife-transparent.png
+new file mode 100644
+index 0000000..b20fc68
+Binary files /dev/null and b/public/images/motif-wildlife-transparent.png differ
+diff --git a/src/components/BrandLockup.module.css b/src/components/BrandLockup.module.css
+new file mode 100644
+index 0000000..3be83f4
+--- /dev/null
++++ b/src/components/BrandLockup.module.css
+@@ -0,0 +1,98 @@
++.lockup {
++  --brand-ink: var(--ink);
++  --brand-copy: var(--cream);
++  --brand-meta: rgba(247, 249, 252, 0.74);
++
++  display: inline-flex;
++  align-items: center;
++  gap: 11px;
++  min-width: 0;
++  line-height: 1;
++}
++
++.light {
++  --brand-copy: var(--ink);
++  --brand-meta: var(--muted);
++}
++
++.crest {
++  display: grid;
++  place-items: center;
++  width: 46px;
++  height: 46px;
++  flex: none;
++  padding: 5px;
++  border-radius: 14px;
++  background: var(--cream);
++  box-shadow: 0 7px 18px -12px rgba(0, 19, 64, 0.72);
++}
++
++.crest img {
++  width: 100%;
++  height: 100%;
++  object-fit: contain;
++}
++
++.copy {
++  display: grid;
++  gap: 4px;
++  min-width: 0;
++}
++
++.copy strong {
++  color: var(--brand-copy);
++  font-family: var(--font-display);
++  font-size: 1.25rem;
++  font-weight: 500;
++  letter-spacing: -0.02em;
++}
++
++.copy small {
++  color: var(--brand-meta);
++  font-size: 0.56rem;
++  font-weight: 800;
++  letter-spacing: 0.13em;
++  line-height: 1.25;
++  text-transform: uppercase;
++}
++
++.copy em {
++  margin-top: 2px;
++  color: var(--accent);
++  font-size: 0.58rem;
++  font-style: normal;
++  font-weight: 800;
++  letter-spacing: 0.14em;
++  line-height: 1.25;
++  text-transform: uppercase;
++}
++
++.compact {
++  gap: 9px;
++}
++
++.compact .crest {
++  width: 36px;
++  height: 36px;
++  padding: 4px;
++  border-radius: 11px;
++}
++
++.compact .copy {
++  gap: 2px;
++}
++
++.compact .copy strong {
++  font-size: 1.05rem;
++}
++
++.compact .copy small {
++  font-size: 0.56rem;
++  letter-spacing: 0.08em;
++}
++
++@media (max-width: 350px) {
++  .compact .copy small {
++    display: none;
++  }
++}
+diff --git a/src/components/BrandLockup.tsx b/src/components/BrandLockup.tsx
+new file mode 100644
+index 0000000..f460291
+--- /dev/null
++++ b/src/components/BrandLockup.tsx
+@@ -0,0 +1,41 @@
++import { Link } from "react-router-dom";
++import clsx from "clsx";
++import s from "./BrandLockup.module.css";
++
++type Tone = "dark" | "light";
++
++interface BrandLockupProps {
++  /** Extra CSS-module class from the place where the lockup is rendered. */
++  className?: string;
++  /** `dark` is for a dark surrounding surface; `light` is for paper surfaces. */
++  tone?: Tone;
++  /** Keeps the complete name accessible while allowing a compact mobile treatment. */
++  compact?: boolean;
++  /** Home mastheads can add the founding detail without duplicating it everywhere. */
++  showSince?: boolean;
++  onClick?: () => void;
++}
++
++/**
++ * The shared, live-text Group lockup. The supplied crest remains the brand mark;
++ * keeping the descriptor as text makes it crisp, localisable and legible at all sizes.
++ */
++export function BrandLockup({ className, tone = "dark", compact = false, showSince = false, onClick }: BrandLockupProps) {
++  return (
++    <Link
++      to="/"
++      className={clsx(s.lockup, tone === "light" ? s.light : s.dark, compact && s.compact, className)}
++      aria-label="Braeburn Group of International Schools home"
++      onClick={onClick}
++    >
++      <span className={s.crest} aria-hidden="true">
++        <img src="brand/logo-mark.png" alt="" width={44} height={44} />
++      </span>
++      <span className={s.copy}>
++        <strong>Braeburn</strong>
++        <small>Group of International Schools</small>
++        {showSince && <em>Since 1979</em>}
++      </span>
++    </Link>
++  );
++}
+diff --git a/src/components/Locator.tsx b/src/components/Locator.tsx
+index bd094dc..ed7ba6f 100644
+--- a/src/components/Locator.tsx
++++ b/src/components/Locator.tsx
+@@ -79,7 +79,6 @@ export function Locator({ stage, onStage }: Props) {
+ 
+   return (
+     <section id="schools" className={clsx(s.section, "section on-dark")} aria-labelledby="locator-title">
+-      <div className="motif" style={{ backgroundImage: "url(images/motif-wildlife.png)", opacity: 0.12 }} />
+       <div className={clsx("container", s.inner)}>
+         <div className={s.head}>
+           <div>
+diff --git a/src/components/Shell.module.css b/src/components/Shell.module.css
+index 4c55962..2c354f4 100644
+--- a/src/components/Shell.module.css
++++ b/src/components/Shell.module.css
+@@ -33,7 +33,13 @@
+   }
+ }
+ 
+-.railLogo img {
++.railLogo {
++  position: relative;
++  display: grid;
++  place-items: center;
++}
++
++.railLogo > img {
+   width: 44px;
+   height: 44px;
+   border-radius: 14px;
+@@ -43,7 +49,7 @@
+   transition: transform 0.45s var(--ease);
+ }
+ 
+-.railLogo:hover img {
++.railLogo:hover > img {
+   transform: rotate(-6deg) scale(1.05);
+ }
+ 
+@@ -172,26 +178,35 @@
+ }
+ 
+ .topLogo {
+-  display: inline-flex;
+-  align-items: center;
+-  gap: 10px;
++  gap: 9px;
+   padding: 6px 14px 6px 6px;
+   border-radius: 999px;
+ }
+ 
+-.topLogo img {
+-  width: 32px;
+-  height: 32px;
+-  border-radius: 10px;
+-  object-fit: contain;
++.topLogo > span:first-child {
++  width: 36px;
++  height: 36px;
+   padding: 4px;
+-  background: var(--white);
++  border-radius: 11px;
+ }
+ 
+-.topLogo span {
+-  font-family: var(--font-display);
++.topLogo > span:last-child {
++  gap: 2px;
++}
++
++.topLogo > span:last-child strong {
+   font-size: 1.05rem;
+-  letter-spacing: -0.01em;
++}
++
++.topLogo > span:last-child small {
++  font-size: 0.6rem;
++  letter-spacing: 0.075em;
++}
++
++@media (max-width: 350px) {
++  .topLogo > span:last-child small {
++    display: none;
++  }
+ }
+ 
+ .topMenu {
+@@ -300,37 +315,27 @@
+ }
+ 
+ .curtainLogo {
+-  display: inline-flex;
+-  align-items: center;
+   gap: 12px;
+ }
+ 
+-.curtainLogo img {
++.curtainLogo > span:first-child {
+   width: 40px;
+   height: 40px;
+-  border-radius: 12px;
+-  object-fit: contain;
+   padding: 5px;
+-  background: var(--white);
++  border-radius: 12px;
+ }
+ 
+-.curtainLogo span {
+-  display: grid;
++.curtainLogo > span:last-child {
+   line-height: 1.1;
+ }
+ 
+-.curtainLogo strong {
+-  font-family: var(--font-display);
+-  font-weight: 500;
++.curtainLogo > span:last-child strong {
+   font-size: 1.2rem;
+ }
+ 
+-.curtainLogo small {
++.curtainLogo > span:last-child small {
+   font-size: 0.62rem;
+   letter-spacing: 0.14em;
+-  text-transform: uppercase;
+-  color: var(--muted-light);
+-  font-weight: 700;
+ }
+ 
+ .curtainClose {
+diff --git a/src/components/Shell.tsx b/src/components/Shell.tsx
+index b915364..09b12b0 100644
+--- a/src/components/Shell.tsx
++++ b/src/components/Shell.tsx
+@@ -24,6 +24,7 @@ import {
+ } from "lucide-react";
+ import clsx from "clsx";
+ import { SCHOOLS, schoolById } from "../data/schools";
++import { BrandLockup } from "./BrandLockup";
+ import s from "./Shell.module.css";
+ 
+ /* ------------------------------------------------------------------ */
+@@ -136,15 +137,8 @@ function Curtain({ onClose, onEnquire }: { onClose: () => void; onEnquire: () =>
+       exit={{ clipPath: "inset(0 0 100% 0)" }}
+       transition={{ duration: 0.65, ease: EASE }}
+     >
+-      <div className="motif" style={{ backgroundImage: "url(images/motif-wildlife.png)", opacity: 0.18 }} />
+       <div className={s.curtainHead}>
+-        <Link to="/" className={s.curtainLogo} onClick={onClose}>
+-          <img src="brand/logo-mark.png" alt="" width={40} height={40} />
+-          <span>
+-            <strong>Braeburn</strong>
+-            <small>Group of International Schools</small>
+-          </span>
+-        </Link>
++        <BrandLockup className={s.curtainLogo} compact onClick={onClose} />
+         <button className={s.curtainClose} onClick={onClose} aria-label="Close menu">
+           <X />
+         </button>
+@@ -434,9 +428,9 @@ export function Shell() {
+           Skip to content
+         </a>
+ 
+-        {/* Desktop side rail */}
++        {/* Desktop side rail: crest-only, persistent wayfinding. */}
+         <aside className={clsx(s.rail, "no-print")} aria-label="Primary">
+-          <Link to="/" className={s.railLogo} aria-label="Braeburn Group home">
++          <Link to="/" className={s.railLogo} aria-label="Braeburn Group of International Schools home">
+             <img src="brand/logo-mark.png" alt="" width={44} height={44} />
+           </Link>
+           <nav className={s.railNav} aria-label="Primary">
+@@ -466,10 +460,7 @@ export function Shell() {
+ 
+         {/* Mobile floating top bar */}
+         <header className={clsx(s.topbar, "no-print")}>
+-          <Link to="/" className={clsx(s.topLogo, "glass-dark")} aria-label="Braeburn Group home">
+-            <img src="brand/logo-mark.png" alt="" width={32} height={32} />
+-            <span>Braeburn</span>
+-          </Link>
++          <BrandLockup className={clsx(s.topLogo, "glass-dark")} compact />
+           <button
+             className={clsx(s.topMenu, "glass-dark")}
+             onClick={() => setMenu(true)}
+diff --git a/src/index.css b/src/index.css
+index 4d6bcb3..4419a3b 100644
+--- a/src/index.css
++++ b/src/index.css
+@@ -424,23 +424,20 @@ ol {
+   border: 1px solid var(--line);
+ }
+ 
+-/* Wildlife line-art motif layer. The source is white line-art on black,
+-   so `screen` drops the black on dark surfaces; on light surfaces we
+-   invert and multiply instead. */
++/* Wildlife line-art motif layer. Source art is transparent so it can be
++   placed predictably rather than blend-reacting with text or photography. */
+ .motif {
+   position: absolute;
+   inset: 0;
+   background-size: cover;
+   background-position: center;
+   background-repeat: no-repeat;
+-  mix-blend-mode: screen;
+-  opacity: 0.32;
++  opacity: 0.24;
+   pointer-events: none;
+ }
+ 
+ .motif.light {
+   filter: invert(1);
+-  mix-blend-mode: multiply;
+   opacity: 0.1;
+ }
+ 
+diff --git a/src/pages/CampusPage.module.css b/src/pages/CampusPage.module.css
+index 2e318fd..f526a32 100644
+--- a/src/pages/CampusPage.module.css
++++ b/src/pages/CampusPage.module.css
+@@ -26,20 +26,24 @@
+ .heroShade {
+   position: absolute;
+   inset: 0;
+-  background: linear-gradient(180deg, rgba(1, 31, 89, 0.55), rgba(1, 31, 89, 0.15) 35%, rgba(1, 31, 89, 0.92) 100%);
++  background: linear-gradient(180deg, rgba(1, 31, 89, 0.64), rgba(1, 31, 89, 0.24) 38%, rgba(1, 31, 89, 0.84) 100%);
+ }
+ 
+-.heroMotif {
+-  inset: -20% -10% -10%;
+-  opacity: 0.45;
+-  background-size: 150% auto;
+-  background-position: right bottom;
+-  will-change: transform;
++/* The photograph creates place; copy gets an independent, stable tonal field.
++   This stays effective even where backdrop filters are unavailable. */
++.heroQuietField {
++  position: absolute;
++  inset: 0;
++  pointer-events: none;
++  background: linear-gradient(180deg, rgba(0, 19, 64, 0.14) 0%, rgba(0, 19, 64, 0.18) 36%, rgba(0, 19, 64, 0.86) 100%);
+ }
+ 
+ @media (min-width: 1024px) {
+-  .heroMotif {
+-    background-size: 110% auto;
++  .heroQuietField {
++    width: min(70%, 900px);
++    background:
++      linear-gradient(90deg, rgba(0, 19, 64, 0.97) 0%, rgba(0, 19, 64, 0.91) 58%, rgba(0, 19, 64, 0.52) 78%, transparent 100%),
++      linear-gradient(180deg, rgba(0, 19, 64, 0.24), rgba(0, 19, 64, 0.78));
+   }
+ }
+ 
+@@ -426,36 +430,37 @@
+   gap: 10px;
+ }
+ 
+-/* ---------- motif band ---------- */
++/* ---------- Nairobi wayfinding signature ---------- */
+ 
+ .band {
+   position: relative;
+-  padding: clamp(72px, 10vw, 140px) 0;
++  padding: clamp(52px, 8vw, 104px) 0;
+   background: var(--forest-deep);
+   color: var(--cream);
+   overflow: hidden;
+ }
+ 
+-.bandMotif {
+-  inset: 0 -12%;
+-  opacity: 0.5;
+-  background-size: auto 130%;
+-  background-position: center;
+-  background-repeat: repeat-x;
+-  will-change: transform;
++.bandShell {
++  display: grid;
++  overflow: hidden;
++  border: 1px solid rgba(247, 249, 252, 0.15);
++  border-radius: var(--r-xl);
++  box-shadow: 0 30px 60px -42px rgba(0, 19, 64, 0.95);
+ }
+ 
+-.bandInner {
++.bandCopy {
+   position: relative;
++  z-index: 1;
+   display: grid;
+-  gap: 40px;
++  gap: 26px;
++  align-content: center;
++  padding: clamp(28px, 5vw, 64px);
++  background: var(--forest-deep);
+ }
+ 
+-@media (min-width: 900px) {
+-  .bandInner {
+-    grid-template-columns: 1.3fr 1fr;
+-    align-items: end;
+-  }
++.bandCopy > * {
++  display: grid;
++  gap: 14px;
+ }
+ 
+ .bandQuote p {
+@@ -473,15 +478,62 @@
+ }
+ 
+ .bandNote {
+-  display: grid;
+-  gap: 12px;
++  padding-top: 20px;
++  border-top: 1px solid var(--line-light);
+ }
+ 
+-.bandNote p:last-child {
++.bandNote p {
++  max-width: 60ch;
+   color: var(--muted-light);
+   font-size: 0.95rem;
+ }
+ 
++/* Artwork has its own panel. It can be expressive without ever competing
++   with the quote, explanatory copy, controls or focus states. */
++.bandArtwork {
++  position: relative;
++  min-height: 250px;
++  overflow: hidden;
++  background:
++    radial-gradient(circle at 72% 30%, rgba(212, 168, 67, 0.16), transparent 34%),
++    #09275e;
++}
++
++.bandArtwork::after {
++  content: "";
++  position: absolute;
++  inset: 16px;
++  border: 1px solid rgba(247, 249, 252, 0.13);
++  border-radius: calc(var(--r-xl) - 10px);
++  pointer-events: none;
++}
++
++.bandMotif {
++  inset: -4% -85% -8%;
++  opacity: 0.47;
++  background-size: auto 96%;
++  background-position: center;
++  background-repeat: no-repeat;
++  will-change: transform;
++}
++
++@media (min-width: 900px) {
++  .bandShell {
++    grid-template-columns: minmax(0, 1.2fr) minmax(330px, 0.8fr);
++    min-height: 420px;
++  }
++
++  .bandArtwork {
++    min-height: auto;
++  }
++
++  .bandMotif {
++    inset: -3% -104% -3%;
++    background-size: auto 93%;
++    background-position: center;
++  }
++}
++
+ /* ---------- day in the life ---------- */
+ 
+ .day {
+@@ -745,12 +797,39 @@
+   overflow: hidden;
+ }
+ 
++/* Wildlife remains part of the Nairobi signature on solid ink surfaces,
++   but is contained in the non-reading side of the CTA. */
++.ctaArtwork {
++  display: none;
++}
++
+ .ctaInner {
+   position: relative;
++  z-index: 1;
+   display: grid;
+   gap: 32px;
+ }
+ 
++@media (min-width: 900px) {
++  .ctaArtwork {
++    position: absolute;
++    z-index: 0;
++    inset: 0 0 0 auto;
++    display: block;
++    width: min(62%, 860px);
++    overflow: hidden;
++    -webkit-mask-image: linear-gradient(90deg, transparent 0%, transparent 27%, #000 62%, #000 100%);
++    mask-image: linear-gradient(90deg, transparent 0%, transparent 27%, #000 62%, #000 100%);
++  }
++
++  .ctaMotif {
++    inset: -6% -32%;
++    opacity: 0.27;
++    background-size: auto 92%;
++    background-position: center right;
++  }
++}
++
+ @media (min-width: 900px) {
+   .ctaInner {
+     grid-template-columns: 1.4fr 1fr;
+diff --git a/src/pages/CampusPage.tsx b/src/pages/CampusPage.tsx
+index ce5d54c..7143f6f 100644
+--- a/src/pages/CampusPage.tsx
++++ b/src/pages/CampusPage.tsx
+@@ -207,8 +207,6 @@ export default function CampusPage() {
+   const heroRef = useRef<HTMLElement>(null);
+   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
+   const imgY = useTransform(scrollYProgress, [0, 1], ["0%", "26%"]);
+-  const motifY = useTransform(scrollYProgress, [0, 1], ["0%", "-28%"]);
+-  const motifX = useTransform(scrollYProgress, [0, 1], ["0%", "5%"]);
+   const copyY = useTransform(scrollYProgress, [0, 1], ["0%", "38%"]);
+   const copyO = useTransform(scrollYProgress, [0, 0.65], [1, 0]);
+   useMotionValueEvent(scrollYProgress, "change", (v) => setShowBar(v >= 0.95));
+@@ -228,11 +226,7 @@ export default function CampusPage() {
+           <img src="images/nairobi-hero.jpg" alt="" fetchPriority="high" />
+         </motion.div>
+         <div className={s.heroShade} aria-hidden="true" />
+-        <motion.div
+-          className={clsx("motif", s.heroMotif)}
+-          style={{ backgroundImage: "url(images/motif-wildlife.png)", y: motifY, x: motifX }}
+-          aria-hidden="true"
+-        />
++        <div className={s.heroQuietField} aria-hidden="true" />
+         <motion.div className={clsx("container", s.heroInner)} style={{ y: copyY, opacity: copyO }}>
+           <p className={s.crumb}>
+             <Link to="/">Braeburn Group</Link>
+@@ -338,28 +332,34 @@ export default function CampusPage() {
+         </div>
+       </section>
+ 
+-      {/* ---------------- Motif parallax band ---------------- */}
+-      <section ref={bandRef} className={s.band} aria-label="The Nairobi signature">
+-        <motion.div
+-          className={clsx("motif", s.bandMotif)}
+-          style={{ backgroundImage: "url(images/motif-wildlife.png)", x: bandX }}
+-          aria-hidden="true"
+-        />
+-        <div className={clsx("container", s.bandInner)}>
+-          <Reveal>
+-            <blockquote className={s.bandQuote}>
+-              <p>"I know every path on this campus by the animal on its signpost. Giraffe means the library."</p>
+-              <footer>— Amara, Year 6</footer>
+-            </blockquote>
+-          </Reveal>
+-          <Reveal delay={0.1} className={s.bandNote}>
+-            <p className="eyebrow light">The Nairobi signature</p>
+-            <p>
+-              Savannah wildlife line-art is Nairobi's wayfinding device — on signposts, on this site, on the prospectus
+-              cover. Nanyuki's is mountain forms; Kisumu's is water. Swap the logo out and the design should visibly
+-              break.
+-            </p>
+-          </Reveal>
++      {/* ---------------- Nairobi wayfinding signature ---------------- */}
++      <section ref={bandRef} className={s.band} aria-labelledby="signature-title">
++        <div className={clsx("container", s.bandShell)}>
++          <div className={s.bandCopy}>
++            <Reveal>
++              <p className="eyebrow light">Nairobi wayfinding · giraffe path</p>
++              <blockquote className={s.bandQuote}>
++                <p>"I know every path on this campus by the animal on its signpost. Giraffe means the library."</p>
++                <footer>— Amara, Year 6</footer>
++              </blockquote>
++            </Reveal>
++            <Reveal delay={0.1} className={s.bandNote}>
++              <h2 id="signature-title" className="sr-only">
++                The Nairobi signature
++              </h2>
++              <p>
++                Savannah wildlife line-art is Nairobi's wayfinding device — on signposts, on this site and on the
++                prospectus cover. Nanyuki's is mountain forms; Kisumu's is water. Swap the logo out and the design
++                should visibly break.
++              </p>
++            </Reveal>
++          </div>
++          <motion.div className={s.bandArtwork} style={{ x: bandX }} aria-hidden="true">
++            <div
++              className={clsx("motif", s.bandMotif)}
++              style={{ backgroundImage: "url(images/motif-wildlife-transparent.png)" }}
++            />
++          </motion.div>
+         </div>
+       </section>
+ 
+@@ -468,7 +468,12 @@ export default function CampusPage() {
+ 
+       {/* ---------------- CTA ---------------- */}
+       <section className={clsx("section on-dark", s.cta)} aria-labelledby="cta-title">
+-        <div className="motif" style={{ backgroundImage: "url(images/motif-wildlife.png)", opacity: 0.16 }} aria-hidden="true" />
++        <div className={s.ctaArtwork} aria-hidden="true">
++          <div
++            className={clsx("motif", s.ctaMotif)}
++            style={{ backgroundImage: "url(images/motif-wildlife-transparent.png)" }}
++          />
++        </div>
+         <div className={clsx("container", s.ctaInner)}>
+           <Reveal>
+             <p className="eyebrow light">Next step</p>
+diff --git a/src/pages/GroupHome.module.css b/src/pages/GroupHome.module.css
+index e7b0fb0..ff4bd43 100644
+--- a/src/pages/GroupHome.module.css
++++ b/src/pages/GroupHome.module.css
+@@ -1,66 +1,110 @@
+-/* ---------- hero ---------- */
++/* ---------- hero: quiet field / living portrait ---------- */
+ 
+ .hero {
+   position: relative;
+-  min-height: 100svh;
++  isolation: isolate;
++  min-height: max(700px, 100svh);
+   display: flex;
+   overflow: hidden;
+   background: var(--ink);
+   color: var(--cream);
+ }
+ 
+-.heroMedia {
++/* This is deliberately static. It supplies soft place and colour only;
++   the sharp portrait at the right is the part allowed to move. */
++.heroBackdrop {
+   position: absolute;
+-  inset: -12% 0 0;
+-  will-change: transform;
++  z-index: -3;
++  inset: -28px;
++  overflow: hidden;
++}
++
++.heroBackdrop img {
++  width: 100%;
++  height: 100%;
++  object-fit: cover;
++  filter: blur(18px) brightness(0.52) saturate(0.72);
++  transform: scale(1.08);
++}
++
++.heroBackdropTint {
++  position: absolute;
++  z-index: -2;
++  inset: 0;
++  background:
++    linear-gradient(90deg, rgba(0, 19, 64, 0.64), rgba(1, 31, 89, 0.4) 58%, rgba(0, 19, 64, 0.18)),
++    rgba(1, 31, 89, 0.22);
++}
++
++/* A sharp photo window carries the human story, deliberately separate
++   from the reading field. */
++.heroPhotoWindow {
++  position: absolute;
++  z-index: -1;
++  inset: 0 0 auto;
++  height: clamp(252px, 40svh, 390px);
++  overflow: hidden;
++  background: var(--forest-deep);
++}
++
++.heroPhotoWindow::after {
++  content: "";
++  position: absolute;
++  inset: 0;
++  background: linear-gradient(180deg, rgba(0, 19, 64, 0.08) 42%, rgba(0, 19, 64, 0.82) 100%);
+ }
+ 
+ .heroImg {
+   width: 100%;
+   height: 100%;
+   object-fit: cover;
++  object-position: 58% center;
+   animation: kenburns 18s var(--ease) forwards;
+ }
+ 
+-.heroShade {
++/* Copy always sits on a stable ink field; it is not dependent on blur,
++   a photograph crop or browser support for backdrop filters. */
++.heroCopyField {
+   position: absolute;
++  z-index: 0;
+   inset: 0;
+-  background: linear-gradient(
+-    180deg,
+-    rgba(1, 31, 89, 0.6) 0%,
+-    rgba(1, 31, 89, 0.12) 28%,
+-    rgba(1, 31, 89, 0.3) 55%,
+-    rgba(1, 31, 89, 0.94) 100%
+-  );
++  pointer-events: none;
++  background: linear-gradient(180deg, rgba(0, 19, 64, 0) 0, rgba(0, 19, 64, 0.16) 33%, var(--forest-deep) 49%, var(--forest-deep) 100%);
+ }
+ 
+ .heroInner {
+   position: relative;
++  z-index: 1;
+   display: flex;
+   flex-direction: column;
+-  justify-content: space-between;
+-  gap: 40px;
+-  padding-top: calc(88px + env(safe-area-inset-top));
++  justify-content: flex-end;
++  gap: 20px;
++  padding-top: calc(clamp(252px, 40svh, 390px) + 26px + env(safe-area-inset-top));
+   padding-bottom: 48px;
+ }
+ 
+-@media (min-width: 1024px) {
+-  .heroInner {
+-    padding-top: 40px;
+-    padding-bottom: 72px;
+-  }
++.heroHeader {
++  display: grid;
++  gap: 20px;
++}
++
++/* The complete Group identity appears once, in the opening home masthead.
++   It scrolls away with the hero, leaving the rail crest as quiet wayfinding. */
++.homeBrand {
++  display: none;
+ }
+ 
+ .heroTop {
+   display: flex;
+   flex-wrap: wrap;
+-  justify-content: space-between;
+-  gap: 8px 24px;
+-  font-size: 0.7rem;
++  justify-content: flex-start;
++  gap: 8px 28px;
++  max-width: 600px;
++  font-size: 0.68rem;
+   font-weight: 800;
+   letter-spacing: 0.16em;
+   text-transform: uppercase;
+-  color: var(--muted-light);
++  color: rgba(247, 249, 252, 0.76);
+ }
+ 
+ .heroBottom {
+@@ -69,13 +113,6 @@
+   align-items: end;
+ }
+ 
+-@media (min-width: 1024px) {
+-  .heroBottom {
+-    grid-template-columns: 1.5fr 1fr;
+-    gap: 56px;
+-  }
+-}
+-
+ .heroCopy {
+   display: grid;
+   gap: 22px;
+@@ -85,7 +122,7 @@
+ .heroLede {
+   font-size: clamp(1.05rem, 1.4vw, 1.25rem);
+   line-height: 1.55;
+-  color: rgba(247, 249, 252, 0.84);
++  color: rgba(247, 249, 252, 0.9);
+   max-width: 46ch;
+   text-wrap: pretty;
+ }
+@@ -118,7 +155,10 @@
+   gap: 12px;
+   max-width: 460px;
+   padding: 22px;
++  border: 1px solid rgba(247, 249, 252, 0.18);
+   border-radius: var(--r-lg);
++  background: rgba(0, 19, 64, 0.88);
++  box-shadow: 0 24px 42px -30px rgba(0, 19, 64, 0.95);
+ }
+ 
+ .quickTitle {
+@@ -179,6 +219,115 @@
+ }
+ 
+ @media (min-width: 1024px) {
++  .hero {
++    min-height: 100svh;
++  }
++
++  /* A landscape window preserves the whole pupil group instead of turning
++     a wide photograph into a narrow, cropped full-height strip. The copy
++     field ends at its edge: no pupil is darkened by a reading gradient. */
++  .heroPhotoWindow {
++    inset: clamp(88px, 11svh, 132px) 0 auto auto;
++    width: min(50%, 780px);
++    height: auto;
++    aspect-ratio: 16 / 10;
++    border-radius: 30px 0 0 30px;
++    box-shadow: -20px 28px 54px -38px rgba(0, 19, 64, 0.95);
++  }
++
++  .heroPhotoWindow::before {
++    content: "";
++    position: absolute;
++    z-index: 1;
++    inset: 28px auto 28px 0;
++    width: 2px;
++    background: var(--accent);
++  }
++
++  .heroPhotoWindow::after {
++    background: linear-gradient(90deg, rgba(0, 19, 64, 0.05), transparent 18%, rgba(0, 19, 64, 0.08));
++  }
++
++  .heroImg {
++    object-position: 50% center;
++  }
++
++  .heroCopyField {
++    width: min(50%, 780px);
++    background: linear-gradient(180deg, rgba(0, 19, 64, 0.97), var(--forest-deep) 100%);
++  }
++
++  .heroInner {
++    justify-content: space-between;
++    gap: 40px;
++    padding-top: 32px;
++    padding-bottom: 72px;
++  }
++
++  .heroHeader {
++    gap: 22px;
++  }
++
++  .homeBrand {
++    position: relative;
++    display: inline-flex;
++    gap: 18px;
++    width: fit-content;
++    padding-right: clamp(90px, 12vw, 190px);
++  }
++
++  .homeBrand::after {
++    content: "";
++    position: absolute;
++    top: 50%;
++    right: 0;
++    width: clamp(66px, 10vw, 164px);
++    height: 1px;
++    background: linear-gradient(90deg, rgba(212, 168, 67, 0.95), rgba(212, 168, 67, 0));
++  }
++
++  .homeBrand > span:first-child {
++    width: 78px;
++    height: 78px;
++    padding: 9px;
++    border-radius: 21px;
++  }
++
++  .homeBrand > span:last-child {
++    gap: 5px;
++  }
++
++  .homeBrand > span:last-child strong {
++    font-size: clamp(1.85rem, 2.6vw, 2.45rem);
++  }
++
++  .homeBrand > span:last-child small {
++    font-size: 0.7rem;
++    letter-spacing: 0.11em;
++    line-height: 1.35;
++    white-space: nowrap;
++  }
++
++  .homeBrand > span:last-child em {
++    margin-top: 4px;
++    font-size: 0.66rem;
++    letter-spacing: 0.14em;
++  }
++
++  .heroBottom {
++    grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.7fr);
++    gap: 56px;
++  }
++
++  .heroTop {
++    max-width: 610px;
++  }
++
++  .quickStart {
++    justify-self: end;
++    width: min(100%, 390px);
++  }
++
+   .scrollCue {
+     display: grid;
+   }
+diff --git a/src/pages/GroupHome.tsx b/src/pages/GroupHome.tsx
+index af6568d..7e4d922 100644
+--- a/src/pages/GroupHome.tsx
++++ b/src/pages/GroupHome.tsx
+@@ -8,6 +8,7 @@ import { useSavedProspectus } from "../hooks";
+ import { firstName } from "../lib/prospectus";
+ import { Counter, Footer, Greeting, Reveal, Ticker } from "../components/Bits";
+ import { Locator } from "../components/Locator";
++import { BrandLockup } from "../components/BrandLockup";
+ import { useShell } from "../components/Shell";
+ import s from "./GroupHome.module.css";
+ 
+@@ -51,14 +52,23 @@ export default function GroupHome() {
+     <>
+       {/* ---------------- Hero ---------------- */}
+       <section ref={heroRef} className={s.hero} aria-labelledby="hero-title">
+-        <motion.div className={s.heroMedia} style={{ y }}>
++        {/* A low-detail echo creates atmosphere; the sharp portrait remains a single LCP image. */}
++        <div className={s.heroBackdrop} aria-hidden="true">
++          <img src="images/hero.jpg" alt="" />
++        </div>
++        <div className={s.heroBackdropTint} aria-hidden="true" />
++        <motion.div className={s.heroPhotoWindow} style={{ y }} aria-hidden="true">
+           <img src="images/hero.jpg" alt="" className={s.heroImg} fetchPriority="high" />
+         </motion.div>
+-        <div className={s.heroShade} aria-hidden="true" />
++        <div className={s.heroCopyField} aria-hidden="true" />
+         <motion.div className={clsx("container", s.heroInner)} style={{ opacity: fade }}>
+-          <div className={s.heroTop}>
+-            <span>Braeburn Group of International Schools</span>
+-            <span>Kenya · Tanzania · Rwanda</span>
++          <div className={s.heroHeader}>
++            {/* The full lockup belongs to the home masthead—not to the persistent rail. */}
++            <BrandLockup className={s.homeBrand} showSince />
++            <div className={s.heroTop}>
++              <span>11 schools · one Group</span>
++              <span>Kenya · Tanzania · Rwanda</span>
++            </div>
+           </div>
+           <div className={s.heroBottom}>
+             <div className={s.heroCopy}>
+diff --git a/vite.config.ts b/vite.config.ts
+index 1f06afd..9c30ee6 100644
+--- a/vite.config.ts
++++ b/vite.config.ts
+@@ -16,4 +16,9 @@ export default defineConfig({
+       "@": path.resolve(__dirname, "src"),
+     },
+   },
++  server: {
++    host: "0.0.0.0",
++    // Arena previews are proxied through a generated e2b.app hostname.
++    allowedHosts: true,
++  },
+ });
