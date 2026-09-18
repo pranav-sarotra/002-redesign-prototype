@@ -60,8 +60,6 @@ export default function GroupHome() {
           <img src="images/hero.jpg" alt="" className={s.heroImg} fetchPriority="high" />
         </motion.div>
         <div className={s.heroCopyField} aria-hidden="true" />
-        {/* Understated gold hairline marking the image/text boundary (desktop). */}
-        <div className={s.heroBoundary} aria-hidden="true" />
         <motion.div className={clsx("container", s.heroInner)} style={{ opacity: fade }}>
           {/* Group masthead — part of the hero content, not fixed navigation,
               so it scrolls away as the visitor reaches Schools and beyond. */}

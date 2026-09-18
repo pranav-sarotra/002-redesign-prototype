@@ -72,11 +72,6 @@
   background: linear-gradient(180deg, rgba(0, 19, 64, 0) 0, rgba(0, 19, 64, 0.16) 33%, var(--forest-deep) 49%, var(--forest-deep) 100%);
 }
 
-/* Desktop-only gold hairline that marks the image/text boundary. */
-.heroBoundary {
-  display: none;
-}
-
 .heroInner {
   position: relative;
   z-index: 1;
@@ -291,70 +286,61 @@
 }
 
 @media (min-width: 1024px) {
-  /* A deliberate image/text boundary: a stable navy copy field on the left,
-     a separate sharp landscape photo window on the right. The seam width is
-     shared by every hero layer so the gold hairline lands exactly on it. */
+  /* One full-bleed sharp photograph with a smooth navy gradient washing in
+     from the left for the reading copy. No box edges, no vertical seam —
+     the image and the copy field flow into one another. */
   .hero {
-    --hero-window: min(46%, 760px);
     min-height: 100svh;
-    background: var(--ink);
+    background: var(--forest-deep);
   }
 
-  /* The right side is solid navy carrying one sharp window; no blurred echo
-     bleeds across the boundary on desktop. */
+  /* Desktop uses a single sharp full-bleed image, so the blurred echo layer
+     is not needed. */
   .heroBackdrop,
   .heroBackdropTint {
     display: none;
   }
 
-  /* Landscape window, right-aligned and vertically centred, framed in navy.
-     No diagonal clip means the whole pupil group is preserved and square to
-     the boundary. */
+  /* Full-bleed sharp photo across the whole hero. Oversized top and bottom
+     so the parallax translate never exposes a gap behind the image. */
   .heroPhotoWindow {
-    inset: 50% 0 auto auto;
-    translate: 0 -50%;
-    width: var(--hero-window);
-    height: auto;
-    aspect-ratio: 16 / 10;
-    border-radius: 24px 0 0 24px;
+    inset: -36% 0 auto 0;
+    translate: none;
+    width: 100%;
+    height: 142%;
+    aspect-ratio: auto;
+    border-radius: 0;
     clip-path: none;
-    box-shadow: -26px 30px 60px -40px rgba(0, 19, 64, 0.95);
+    box-shadow: none;
+    background: none;
+    will-change: transform;
   }
 
-  /* Keep the left edge — the first pupil — clear of any darkening; only a
-     quiet vignette weights the lower photo. */
+  /* Gentle bottom weighting only, for footing and the scroll cue — no
+     horizontal edge that could read as a seam. */
   .heroPhotoWindow::after {
-    background: linear-gradient(180deg, transparent 58%, rgba(0, 19, 64, 0.34));
+    background: linear-gradient(180deg, transparent 52%, rgba(0, 19, 64, 0.5));
   }
 
   .heroImg {
-    object-position: 50% center;
+    object-position: 68% center;
   }
 
-  /* Solid, stable navy reading field that stops cleanly at the boundary and
-     never reaches across into the photograph. */
+  /* The copy sits on a smooth navy-to-transparent wash spanning the full
+     width, so the transition into the photograph is soft and continuous. */
   .heroCopyField {
-    width: calc(100% - var(--hero-window));
+    width: 100%;
     background:
-      linear-gradient(180deg, rgba(0, 19, 64, 0.55), var(--forest-deep) 34%);
-  }
-
-  /* Understated gold hairline sitting exactly on the seam. */
-  .heroBoundary {
-    display: block;
-    position: absolute;
-    z-index: 1;
-    top: 0;
-    bottom: 0;
-    right: var(--hero-window);
-    width: 1px;
-    background: linear-gradient(
-      180deg,
-      transparent,
-      rgba(212, 168, 67, 0.5) 14%,
-      rgba(212, 168, 67, 0.5) 86%,
-      transparent
-    );
+      linear-gradient(
+        90deg,
+        var(--forest-deep) 0%,
+        rgba(0, 19, 64, 0.94) 24%,
+        rgba(0, 19, 64, 0.78) 40%,
+        rgba(0, 19, 64, 0.44) 56%,
+        rgba(0, 19, 64, 0.16) 70%,
+        transparent 82%
+      ),
+      linear-gradient(180deg, rgba(0, 19, 64, 0.4), rgba(0, 19, 64, 0.12) 42%, transparent 68%);
   }
 
   .heroInner {
@@ -364,18 +350,19 @@
     padding-bottom: 64px;
   }
 
-  /* All hero copy stays inside the left navy field, never over the photo. */
+  /* Copy is comfortably contained to the well-covered left side, but nothing
+     is clipped to a hard box. */
   .masthead {
-    max-width: min(540px, 40vw);
+    max-width: min(600px, 50vw);
   }
 
   .heroTop {
-    max-width: min(540px, 40vw);
+    max-width: min(600px, 50vw);
   }
 
   .heroBottom {
     grid-template-columns: 1fr;
-    max-width: min(540px, 40vw);
+    max-width: min(560px, 48vw);
     gap: 26px;
   }
 
@@ -387,7 +374,7 @@
 
   .scrollCue {
     display: grid;
-    left: calc((100% - var(--hero-window)) / 2);
+    left: 50%;
   }
 }
 
