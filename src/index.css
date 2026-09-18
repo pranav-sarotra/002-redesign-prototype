@@ -424,23 +424,20 @@ ol {
   border: 1px solid var(--line);
 }
 
-/* Wildlife line-art motif layer. The source is white line-art on black,
-   so `screen` drops the black on dark surfaces; on light surfaces we
-   invert and multiply instead. */
+/* Wildlife line-art motif layer. Source art is transparent so it can be
+   placed predictably rather than blend-reacting with text or photography. */
 .motif {
   position: absolute;
   inset: 0;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  mix-blend-mode: screen;
-  opacity: 0.32;
+  opacity: 0.24;
   pointer-events: none;
 }
 
 .motif.light {
   filter: invert(1);
-  mix-blend-mode: multiply;
   opacity: 0.1;
 }
 

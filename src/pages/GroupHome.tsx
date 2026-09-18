@@ -51,13 +51,18 @@ export default function GroupHome() {
     <>
       {/* ---------------- Hero ---------------- */}
       <section ref={heroRef} className={s.hero} aria-labelledby="hero-title">
-        <motion.div className={s.heroMedia} style={{ y }}>
+        {/* A low-detail echo creates atmosphere; the sharp portrait remains a single LCP image. */}
+        <div className={s.heroBackdrop} aria-hidden="true">
+          <img src="images/hero.jpg" alt="" />
+        </div>
+        <div className={s.heroBackdropTint} aria-hidden="true" />
+        <motion.div className={s.heroPhotoWindow} style={{ y }} aria-hidden="true">
           <img src="images/hero.jpg" alt="" className={s.heroImg} fetchPriority="high" />
         </motion.div>
-        <div className={s.heroShade} aria-hidden="true" />
+        <div className={s.heroCopyField} aria-hidden="true" />
         <motion.div className={clsx("container", s.heroInner)} style={{ opacity: fade }}>
           <div className={s.heroTop}>
-            <span>Braeburn Group of International Schools</span>
+            <span>11 schools · one Group</span>
             <span>Kenya · Tanzania · Rwanda</span>
           </div>
           <div className={s.heroBottom}>

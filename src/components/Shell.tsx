@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import clsx from "clsx";
 import { SCHOOLS, schoolById } from "../data/schools";
+import { BrandLockup } from "./BrandLockup";
 import s from "./Shell.module.css";
 
 /* ------------------------------------------------------------------ */
@@ -136,15 +137,8 @@ function Curtain({ onClose, onEnquire }: { onClose: () => void; onEnquire: () =>
       exit={{ clipPath: "inset(0 0 100% 0)" }}
       transition={{ duration: 0.65, ease: EASE }}
     >
-      <div className="motif" style={{ backgroundImage: "url(images/motif-wildlife.png)", opacity: 0.18 }} />
       <div className={s.curtainHead}>
-        <Link to="/" className={s.curtainLogo} onClick={onClose}>
-          <img src="brand/logo-mark.png" alt="" width={40} height={40} />
-          <span>
-            <strong>Braeburn</strong>
-            <small>Group of International Schools</small>
-          </span>
-        </Link>
+        <BrandLockup className={s.curtainLogo} compact onClick={onClose} />
         <button className={s.curtainClose} onClick={onClose} aria-label="Close menu">
           <X />
         </button>
@@ -392,6 +386,7 @@ function EnquirySheet({ campusId, onClose }: { campusId?: string; onClose: () =>
 
 export function Shell() {
   const location = useLocation();
+  const isHome = location.pathname === "/";
   const [menu, setMenu] = useState(false);
   const [enquiry, setEnquiry] = useState<{ campusId?: string } | null>(null);
 
@@ -434,10 +429,15 @@ export function Shell() {
           Skip to content
         </a>
 
-        {/* Desktop side rail */}
-        <aside className={clsx(s.rail, "no-print")} aria-label="Primary">
-          <Link to="/" className={s.railLogo} aria-label="Braeburn Group home">
+        {/* Desktop side rail. On home this opens into the fixed brand spine. */}
+        <aside className={clsx(s.rail, isHome && s.railHome, "no-print")} aria-label="Primary">
+          <Link to="/" className={s.railLogo} aria-label="Braeburn Group of International Schools home">
             <img src="brand/logo-mark.png" alt="" width={44} height={44} />
+            <span className={s.railBrandCopy}>
+              <strong>Braeburn</strong>
+              <small>Group of International Schools</small>
+              <i>Since 1979</i>
+            </span>
           </Link>
           <nav className={s.railNav} aria-label="Primary">
             {NAV.map(({ to, label, icon: Icon }) => (
@@ -466,10 +466,7 @@ export function Shell() {
 
         {/* Mobile floating top bar */}
         <header className={clsx(s.topbar, "no-print")}>
-          <Link to="/" className={clsx(s.topLogo, "glass-dark")} aria-label="Braeburn Group home">
-            <img src="brand/logo-mark.png" alt="" width={32} height={32} />
-            <span>Braeburn</span>
-          </Link>
+          <BrandLockup className={clsx(s.topLogo, "glass-dark")} compact />
           <button
             className={clsx(s.topMenu, "glass-dark")}
             onClick={() => setMenu(true)}
